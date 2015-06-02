@@ -90,9 +90,10 @@
         positionY = 'bottom';
       }
 
-      self.tooltip.css({ left: posLeft, top: posTop })
-                  .removeClass('tooltip--top-right tooltip--top-center tooltip--top-left tooltip--bottom-right tooltip--bottom-center tooltip--bottom-left')
-                  .addClass('tooltip--' + positionY + '-' + positionX);
+      self.tooltip
+        .css({ left: posLeft, top: posTop })
+        .removeClass('tooltip--top-right tooltip--top-center tooltip--top-left tooltip--bottom-right tooltip--bottom-center tooltip--bottom-left')
+        .addClass('tooltip--' + positionY + '-' + positionX);
 
     },
 
@@ -143,8 +144,9 @@
      */
     addEventHandlers: function() {
 
-      this.element.on('mouseenter', null, this, this.handleMouseEnter)
-                  .on('mouseleave', null, this, this.hide);
+      this.element
+        .on('mouseenter', null, this, this.handleMouseEnter)
+        .on('mouseleave', null, this, this.hide);
       
       this.tooltip.off('click.tooltip').on('click.tooltip', null, this, this.hide);
 
