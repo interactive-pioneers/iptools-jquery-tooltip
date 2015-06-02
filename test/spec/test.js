@@ -1,18 +1,18 @@
 'use strict';
-/* jshint undef: false */
-(function() {
-  describe('iptoolsModal', function() {
 
-    var modal = null;
+(function() {
+  describe('iptTooltip', function() {
+
+    var tooltip = null;
 
     describe('init', function() {
       
       beforeEach(function() {
-        modal = $('.js_trigger-modal').iptoolsModal();
+        tooltip = $('.js_tooltip').iptTooltip();
       });
       
       it('expected to construct object', function() {
-        return expect(modal).to.exist;
+        return expect(tooltip).to.exist;
       });
 
     });
