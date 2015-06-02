@@ -103,7 +103,7 @@
      */
     show: function(event) {
 
-      self = event.data;
+      var self = event.data;
       self.tooltip.addClass('tooltip--active');
 
     },
@@ -115,7 +115,7 @@
      */
     hide: function(event) {
 
-      self = event.data;
+      var self = event.data;
       self.tooltip.removeClass('tooltip--active');
 
     },
