@@ -18,6 +18,9 @@
   <script src="spec/test.js"></script>
   <script src="../bower_components/jquery/dist/jquery.min.js"></script>
   <script src="../src/iptools-jquery-tooltip.js"></script>
-  <script>mocha.run();</script>
+  <script>
+    mocha.globals(['$']);
+    mocha.run();
+  </script>
 </body>
 </html>
