@@ -14,6 +14,7 @@ Simple tooltip plugin, fully customizable with CSS, animation using CSS3 tranisi
 ```html
 <a class="js_tooltip" data-tooltip-text="Text to display inside Tooltip">Open Tooltip</a>
 
+<link rel="stylesheet" href="dist/iptools-jquery-tooltip.css" type="text/css">
 <script src="src/iptools-jquery-tooltip.js"></script>
 <script type="text/javascript">
    $(document).ready(function() {
