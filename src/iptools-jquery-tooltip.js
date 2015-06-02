@@ -24,7 +24,7 @@
 
     this.tooltipText = this.element.attr('data-tooltip-text');
 
-    this.element.css({ 'white-space': 'nowrap' });
+    this.element.css({'white-space': 'nowrap'});
 
     if ($('#' + tooltipID).length === 0) {
       $('<div id="' + tooltipID + '" class="tooltip"></div>').appendTo('body');
@@ -91,7 +91,7 @@
       }
 
       self.tooltip
-        .css({ left: posLeft, top: posTop })
+        .css({left: posLeft, top: posTop})
         .removeClass('tooltip--top-right tooltip--top-center tooltip--top-left tooltip--bottom-right tooltip--bottom-center tooltip--bottom-left')
         .addClass('tooltip--' + positionY + '-' + positionX);
 
@@ -147,7 +147,7 @@
       this.element
         .on('mouseenter', null, this, this.handleMouseEnter)
         .on('mouseleave', null, this, this.hide);
-      
+
       this.tooltip.off('click.tooltip').on('click.tooltip', null, this, this.hide);
 
       $(window).off('resize.tooltip').on('resize.tooltip', null, this, this.setDimensions);
@@ -156,7 +156,7 @@
 
   };
 
-  $.fn[ pluginName ] = function (options) {
+  $.fn[ pluginName ] = function(options) {
 
     return this.each(function() {
 
