@@ -1,5 +1,5 @@
 'use strict';
-
+/* jshint undef: false */
 (function() {
   describe('iptTooltip', function() {
 
