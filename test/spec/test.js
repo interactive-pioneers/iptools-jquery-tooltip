@@ -28,6 +28,16 @@
         return expect(tooltip.data('plugin_iptTooltip').settings.maxWidth).to.equal(config.maxWidth);
       });
 
+      it('expected to have class tooltip--active', function() {
+        tooltip.trigger('mouseenter');
+        return expect($('#js_tooltip').hasClass('tooltip--active')).to.be.ok;
+      });
+
+      it('expected to have class tooltip--top-left', function() {
+        tooltip.css({position: 'absolute', bottom: 0, right: 0}).trigger('mouseenter');
+        return expect($('#js_tooltip').hasClass('tooltip--top-left')).to.be.ok;
+      });
+
     });
   });
 })();
