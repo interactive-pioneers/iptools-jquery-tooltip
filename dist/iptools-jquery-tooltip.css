@@ -1,0 +1,31 @@
+.tooltip {
+  position: absolute;
+  z-index: 100;
+  width: auto;
+  padding: 15px;
+  border: 1px solid #000000;
+  background: #FFFFFF;
+  text-align: left;
+  color: #000000;
+  font-size: 12px;
+  line-height: 16px;
+  opacity: 0;
+  transform: scale(0);
+  transition: transform .25s ease-in-out, opacity .25s ease-in-out; }
+  .tooltip--active {
+    opacity: 1;
+    transform: scale(1); }
+  .tooltip--top-right {
+    transform-origin: bottom left; }
+  .tooltip--top-center {
+    transform-origin: bottom center; }
+  .tooltip--top-left {
+    transform-origin: bottom right; }
+  .tooltip--bottom-right {
+    transform-origin: top left; }
+  .tooltip--bottom-center {
+    transform-origin: top center; }
+  .tooltip--bottom-left {
+    transform-origin: top right; }
+
+/*# sourceMappingURL=iptools-jquery-tooltip.css.map */
