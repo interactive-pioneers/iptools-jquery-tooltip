@@ -5,9 +5,12 @@
   var pluginName = 'iptTooltip';
   var defaults = {
     margin: 5,
-    maxWidth: 264
+    maxWidth: 264,
+    tooltipClass: 'tooltip',
+    tooltipClassActiveModifier: '--active',
+    tooltipID: 'js_tooltip',
+    dataAttrTooltipText: 'data-tooltip-text'
   };
-  var tooltipID = 'js_tooltip';
 
   /**
    * IPTTooltip
@@ -22,16 +25,16 @@
     this._defaults = defaults;
     this._name = pluginName;
 
-    this.tooltipText = this.element.attr('data-tooltip-text');
+    this.tooltipText = this.element.attr(this.settings.dataAttrTooltipText);
 
     this.element.css({'white-space': 'nowrap'});
 
-    if ($('#' + tooltipID).length === 0) {
-      $('<div id="' + tooltipID + '" class="tooltip"></div>').appendTo('body');
+    if ($('#' + this.settings.tooltipID).length === 0) {
+      $('<div id="' + this.settings.tooltipID + '" class="' + this.settings.tooltipClass + '"></div>').appendTo('body');
     }
-    this.tooltip = $('#' + tooltipID);
+    this.tooltip = $('#' + this.settings.tooltipID);
 
-    this.addEventHandlers();
+    this.addEventListeners();
 
   }
 
@@ -40,7 +43,7 @@
     /**
      * sets position, height and width of the tooltip
      * @param {event} event - jQuery event
-     * @returns {void}
+     * @returns {undefined}
      */
     setDimensions: function(event) {
 
@@ -93,38 +96,38 @@
       self.tooltip
         .css({left: posLeft, top: posTop})
         .removeClass('tooltip--top-right tooltip--top-center tooltip--top-left tooltip--bottom-right tooltip--bottom-center tooltip--bottom-left')
-        .addClass('tooltip--' + positionY + '-' + positionX);
+        .addClass(self.settings.tooltipClass + '--' + positionY + '-' + positionX);
 
     },
 
     /**
      * shows the tooltip
      * @param {event} event - jQuery event
-     * @returns {void}
+     * @returns {undefined}
      */
     show: function(event) {
 
       var self = event.data;
-      self.tooltip.addClass('tooltip--active');
+      self.tooltip.addClass(self.settings.tooltipClass + self.settings.tooltipClassActiveModifier);
 
     },
 
     /**
      * hides the tooltip
      * @param {event} event - jQuery event
-     * @returns {void}
+     * @returns {undefined}
      */
     hide: function(event) {
 
       var self = event.data;
-      self.tooltip.removeClass('tooltip--active');
+      self.tooltip.removeClass(self.settings.tooltipClass + self.settings.tooltipClassActiveModifier);
 
     },
 
     /**
      * handles mouseenter event on linked element
      * @param {event} event - jQuery event
-     * @returns {void}
+     * @returns {undefined}
      */
     handleMouseEnter: function(event) {
 
@@ -140,23 +143,34 @@
 
     /**
      * adds event handlers
-     * @returns void
+     * @returns {undefined}
      */
-    addEventHandlers: function() {
+    addEventListeners: function() {
 
       this.element
-        .on('mouseenter', null, this, this.handleMouseEnter)
-        .on('mouseleave', null, this, this.hide);
+        .on('mouseenter' + '.' + this._name, null, this, this.handleMouseEnter)
+        .on('mouseleave' + '.' + this._name, null, this, this.hide);
 
-      this.tooltip.off('click.tooltip').on('click.tooltip', null, this, this.hide);
+      this.tooltip
+        .off('click' + '.' + this._name)
+        .on('click' + '.' + this._name, null, this, this.hide);
 
-      $(window).off('resize.tooltip').on('resize.tooltip', null, this, this.setDimensions);
+      $(window)
+        .off('resize' + '.' + this._name)
+        .on('resize' + '.' + this._name, null, this, this.setDimensions);
+
+    },
+
+    destroy: function() {
+
+      this.element.off('mouseenter' + '.' + this._name);
+      this.element.removeData('plugin_' + pluginName);
 
     }
 
   };
 
-  $.fn[ pluginName ] = function(options) {
+  $.fn[pluginName] = function(options) {
 
     return this.each(function() {
 
