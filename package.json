@@ -11,6 +11,14 @@
     {
       "name": "David Lehnen",
       "email": "dl@interactive-pioneers.de"
+    },
+    {
+      "name": "Georg Meyer",
+      "email": "gm@interactive-pioneers.de"
+    },
+    {
+      "name": "Ain Tohvri",
+      "email": "at@interactive-pioneers.de"
     }
   ],
   "bugs": "https://github.com/interactive-pioneers/iptools-jquery-tooltip/issues",
