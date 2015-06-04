@@ -3,11 +3,12 @@
 Simple jQuery Tooltip Plugin
 
 ## Features
+
 Simple tooltip plugin, fully customizable with CSS, animation using CSS3 tranisition.
 
 ## Requirements
 
-- jQuery (version TBD)
+- jQuery 1.11.3 or greater
 
 ## Example
 
@@ -23,7 +24,6 @@ Simple tooltip plugin, fully customizable with CSS, animation using CSS3 tranisi
       });
    });
 </script>
-
 ```
 
 ## Contributions
