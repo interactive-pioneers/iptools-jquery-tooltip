@@ -57,5 +57,19 @@
 
     });
 
+    describe('close', function() {
+
+      beforeEach(function() {
+        tooltip = $('#js_tooltip');
+        object = $('.js_tooltip').iptTooltip(config);
+      });
+
+      it('expected to not have class tooltip--active', function() {
+        object.trigger('mouseleave');
+        return expect(tooltip.hasClass('tooltip--active')).to.be.not.ok;
+      });
+      
+    });
+
   });
 })();
