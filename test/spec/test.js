@@ -10,7 +10,7 @@
 
     var pluginName = 'plugin_iptTooltip';
 
-    var tooltip = $('#js_tooltip');
+    var tooltip = null;
 
     var object = null;
 
@@ -32,6 +32,15 @@
         return expect(object.data(pluginName).settings.maxWidth).to.equal(config.maxWidth);
       });
 
+    });
+
+    describe('open', function() {
+
+      beforeEach(function() {
+        tooltip = $('#js_tooltip');
+        object = $('.js_tooltip').iptTooltip(config);
+      });
+
       it('expected to have class tooltip--active', function() {
         object.trigger('mouseenter');
         return expect(tooltip.hasClass('tooltip--active')).to.be.ok;
@@ -47,5 +56,6 @@
       });
 
     });
+
   });
 })();
