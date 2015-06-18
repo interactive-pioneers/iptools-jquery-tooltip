@@ -60,9 +60,9 @@
       var tooltipHeight = self.tooltip.outerHeight();
       var targetWidth = self.element.outerWidth();
       var targetHeight = self.element.outerHeight();
-      var targetX = self.element[0].offsetLeft;
-      var targetY = self.element[0].offsetTop;
-
+      var targetOffset = self.element.offset();
+      var targetX = targetOffset.left;
+      var targetY = targetOffset.top;
       if (tooltipWidth > viewportWidth) {
         tooltipWidth = viewportWidth;
         self.tooltip.css('max-width', viewportWidth);
