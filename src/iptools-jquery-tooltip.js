@@ -95,7 +95,12 @@
 
       self.tooltip
         .css({left: posLeft, top: posTop})
-        .removeClass('tooltip--top-right tooltip--top-center tooltip--top-left tooltip--bottom-right tooltip--bottom-center tooltip--bottom-left')
+        .removeClass('tooltip--top-right')
+        .removeClass('tooltip--top-center')
+        .removeClass('tooltip--top-left')
+        .removeClass('tooltip--bottom-right')
+        .removeClass('tooltip--bottom-center')
+        .removeClass('tooltip--bottom-left')
         .addClass(self.settings.tooltipClass + '--' + positionY + '-' + positionX);
 
     },
