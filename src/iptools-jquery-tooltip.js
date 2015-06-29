@@ -94,7 +94,7 @@
         positionX = 'center';
       }
 
-      if (posTop < 0) {
+      if (posTop < tooltipHeight) {
         posTop = targetY + targetHeight + self.settings.margin;
         positionY = 'bottom';
       }
