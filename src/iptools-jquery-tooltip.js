@@ -30,9 +30,15 @@
     this.element.css({'white-space': 'nowrap'});
 
     if ($('#' + this.settings.tooltipID).length === 0) {
-      $('<div id="' + this.settings.tooltipID + '" class="' + this.settings.tooltipClass + '"></div>').appendTo('body');
+      $('<div/>', {
+        id: this.settings.tooltipID,
+        class: this.settings.tooltipClass
+      }).appendTo('body');
     }
     this.tooltip = $('#' + this.settings.tooltipID);
+
+    this.active = false;
+    this.resizeTimeout = null;
 
     this.addEventListeners();
 
@@ -113,7 +119,9 @@
     show: function(event) {
 
       var self = event.data;
-      self.tooltip.addClass(self.settings.tooltipClass + self.settings.tooltipClassActiveModifier);
+      self.tooltip
+        .addClass(self.settings.tooltipClass + self.settings.tooltipClassActiveModifier);
+      self.active = true;
 
     },
 
@@ -125,12 +133,14 @@
     hide: function(event) {
 
       var self = event.data;
-      self.tooltip.removeClass(self.settings.tooltipClass + self.settings.tooltipClassActiveModifier);
+      self.tooltip
+        .removeClass(self.settings.tooltipClass + self.settings.tooltipClassActiveModifier);
+      self.active = false;
 
     },
 
     /**
-     * handles mouseenter event on linked element
+     * handles mouseenter event on linked elements
      * @param {event} event - jQuery event
      * @returns {undefined}
      */
@@ -142,6 +152,21 @@
         self.tooltip.html(text);
         self.setDimensions(event);
         self.show(event);
+      }
+
+    },
+
+    /**
+     * handles browser resizing
+     * @param {event} event - jQuery event
+     * @returns {undefined}
+     */
+    handleResize: function(event) {
+
+      var self = event.data;
+      if (self.active) {
+        clearTimeout(self.resizeTimeout);
+        self.resizeTimeout = setTimeout(self.setDimensions, 250);
       }
 
     },
