@@ -94,7 +94,7 @@
         positionX = 'center';
       }
 
-      if (posTop < tooltipHeight) {
+      if (posTop < $(window).scrollTop()) {
         posTop = targetY + targetHeight + self.settings.margin;
         positionY = 'bottom';
       }
