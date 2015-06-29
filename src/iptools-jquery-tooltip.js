@@ -51,36 +51,34 @@
      * @param {event} event - jQuery event
      * @returns {undefined}
      */
-    setDimensions: function(event) {
+    setDimensions: function() {
 
-      var self = event.data;
-
-      self.tooltip.css({
+      this.tooltip.css({
         top: 'auto',
         left: 'auto',
-        'max-width': self.settings.maxWidth
+        'max-width': this.settings.maxWidth
       });
 
       var viewportWidth = $(window).width();
-      var tooltipWidth = self.tooltip.outerWidth();
-      var tooltipHeight = self.tooltip.outerHeight();
-      var targetWidth = self.element.outerWidth();
-      var targetHeight = self.element.outerHeight();
-      var targetOffset = self.element.offset();
+      var tooltipWidth = this.tooltip.outerWidth();
+      var tooltipHeight = this.tooltip.outerHeight();
+      var targetWidth = this.element.outerWidth();
+      var targetHeight = this.element.outerHeight();
+      var targetOffset = this.element.offset();
       var targetX = targetOffset.left;
       var targetY = targetOffset.top;
       if (tooltipWidth > viewportWidth) {
         tooltipWidth = viewportWidth;
-        self.tooltip.css('max-width', viewportWidth);
+        this.tooltip.css('max-width', viewportWidth);
       }
 
       var positionY = 'top';
       var positionX = 'right';
-      var posLeft = targetX + targetWidth + self.settings.margin;
-      var posTop  = targetY - tooltipHeight - self.settings.margin;
+      var posLeft = targetX + targetWidth + this.settings.margin;
+      var posTop  = targetY - tooltipHeight - this.settings.margin;
 
       if (posLeft + tooltipWidth > viewportWidth) {
-        posLeft = targetX - tooltipWidth - self.settings.margin;
+        posLeft = targetX - tooltipWidth - this.settings.margin;
         positionX = 'left';
       }
 
@@ -95,11 +93,11 @@
       }
 
       if (posTop < $(window).scrollTop()) {
-        posTop = targetY + targetHeight + self.settings.margin;
+        posTop = targetY + targetHeight + this.settings.margin;
         positionY = 'bottom';
       }
 
-      self.tooltip
+      this.tooltip
         .css({left: posLeft, top: posTop})
         .removeClass('tooltip--top-right')
         .removeClass('tooltip--top-center')
@@ -107,7 +105,7 @@
         .removeClass('tooltip--bottom-right')
         .removeClass('tooltip--bottom-center')
         .removeClass('tooltip--bottom-left')
-        .addClass(self.settings.tooltipClass + '--' + positionY + '-' + positionX);
+        .addClass(this.settings.tooltipClass + '--' + positionY + '-' + positionX);
 
     },
 
@@ -150,7 +148,7 @@
       var text = self.tooltipText;
       if (text && text !== '') {
         self.tooltip.html(text);
-        self.setDimensions(event);
+        self.setDimensions();
         self.show(event);
       }
 
@@ -164,10 +162,10 @@
     handleResize: function(event) {
 
       var self = event.data;
-      if (self.active) {
-        clearTimeout(self.resizeTimeout);
-        self.resizeTimeout = setTimeout(self.setDimensions, 250);
-      }
+      clearTimeout(self.resizeTimeout);
+      self.resizeTimeout = setTimeout(function() {
+        self.setDimensions();
+      }, 250);
 
     },
 
@@ -187,7 +185,7 @@
 
       $(window)
         .off('resize' + '.' + this._name)
-        .on('resize' + '.' + this._name, null, this, this.setDimensions);
+        .on('resize' + '.' + this._name, null, this, this.handleResize);
 
     },
 
