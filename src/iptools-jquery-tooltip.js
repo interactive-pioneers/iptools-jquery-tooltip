@@ -48,7 +48,6 @@
 
     /**
      * sets position, height and width of the tooltip
-     * @param {event} event - jQuery event
      * @returns {undefined}
      */
     setDimensions: function() {
