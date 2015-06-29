@@ -68,7 +68,7 @@
         object.trigger('mouseleave');
         return expect(tooltip.hasClass('tooltip--active')).to.be.not.ok;
       });
-      
+
     });
 
   });
