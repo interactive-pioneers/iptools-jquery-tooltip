@@ -9,7 +9,8 @@
     tooltipClass: 'tooltip',
     tooltipClassActiveModifier: '--active',
     tooltipID: 'js_tooltip',
-    dataAttrTooltipText: 'data-tooltip-text'
+    dataAttrTooltipText: 'data-tooltip-text',
+    hookInsertHtml: function(html) { return html; }
   };
 
   /**
@@ -146,7 +147,7 @@
       var self = event.data;
       var text = self.tooltipText;
       if (text && text !== '') {
-        self.tooltip.html(text);
+        self.tooltip.html(self.settings.hookInsertHtml(text));
         self.setDimensions();
         self.show(event);
       }
