@@ -60,7 +60,7 @@
      */
     setDimensions: function() {
 
-      this.updateElementDimensions();
+      this.updateTriggerDimensions();
 
       this.setHorizontalPosition(this.settings.defaultHorizontalPosition);
       this.setVerticalPosition(this.settings.defaultVerticalPosition);
@@ -140,15 +140,15 @@
 
       switch (position) {
         case 'left':
-          this.position.left = this.elementDimensions.offsetLeft - this.tooltipWidth - this.settings.margin;
+          this.position.left = this.trigger.offsetLeft - this.tooltipWidth - this.settings.margin;
           this.position.horizontal = 'left';
           break;
         case 'center':
-          this.position.left = this.elementDimensions.offsetLeft + (this.elementDimensions.width - this.tooltipWidth) * 0.5;
+          this.position.left = this.trigger.offsetLeft + (this.trigger.width - this.tooltipWidth) * 0.5;
           this.position.horizontal = 'center';
           break;
         default:
-          this.position.left = this.elementDimensions.offsetLeft + this.elementDimensions.width + this.settings.margin;
+          this.position.left = this.trigger.offsetLeft + this.trigger.width + this.settings.margin;
           this.position.horizontal = 'right';
           break;
       }
@@ -164,11 +164,11 @@
 
       switch (position) {
         case 'bottom':
-          this.position.top = this.elementDimensions.offsetTop + this.elementDimensions.height + this.settings.margin;
+          this.position.top = this.trigger.offsetTop + this.trigger.height + this.settings.margin;
           this.position.vertical = 'bottom';
           break;
         default:
-          this.position.top = this.elementDimensions.offsetTop - this.tooltipHeight - this.settings.margin;
+          this.position.top = this.trigger.offsetTop - this.tooltipHeight - this.settings.margin;
           this.position.vertical = 'top';
           break;
       }
@@ -179,9 +179,9 @@
      * updates the element / trigger dimensions
      * @returns {undefined}
      */
-    updateElementDimensions: function() {
+    updateTriggerDimensions: function() {
 
-      this.elementDimensions = {
+      this.trigger = {
         width: this.$element.outerWidth(),
         height: this.$element.outerHeight(),
         offsetTop: this.$element.offset().top,
@@ -217,7 +217,7 @@
     updateArrowPosition: function() {
 
       if (this.settings.bubbleArrow) {
-        var delta = (this.elementDimensions.offsetLeft - this.position.left) + this.elementDimensions.width / 2;
+        var delta = (this.trigger.offsetLeft - this.position.left) + this.trigger.width / 2;
         this.$tooltip
           .find('.' + this.settings.bubbleArrowClass)
           .css('left', delta + 'px');
@@ -259,7 +259,6 @@
       }
 
     },
-
 
     /**
      * remove tooltip from DOM
