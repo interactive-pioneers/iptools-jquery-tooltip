@@ -20,6 +20,10 @@
         object = $('.js_tooltip').iptTooltip(config);
       });
 
+      afterEach(function() {
+        // object.data(pluginName).destroy();
+      });
+
       it('expected to construct object', function() {
         return expect(object).to.be.an.object;
       });
@@ -37,12 +41,17 @@
     describe('open', function() {
 
       beforeEach(function() {
-        tooltip = $('#js_tooltip');
         object = $('.js_tooltip').iptTooltip(config);
+      });
+
+      afterEach(function() {
+        // object.data(pluginName).destroy();
+        tooltip = null;
       });
 
       it('expected to have class tooltip--active', function() {
         object.trigger('mouseenter');
+        tooltip = object.data(pluginName).$tooltip;
         return expect(tooltip.hasClass('tooltip--active')).to.be.ok;
       });
 
@@ -52,6 +61,7 @@
           bottom: 0,
           right: 0
         }).trigger('mouseenter');
+        tooltip = object.data(pluginName).$tooltip;
         return expect(tooltip.hasClass('tooltip--top-left')).to.be.ok;
       });
 
@@ -60,12 +70,19 @@
     describe('close', function() {
 
       beforeEach(function() {
-        tooltip = $('#js_tooltip');
         object = $('.js_tooltip').iptTooltip(config);
       });
 
+      afterEach(function() {
+        // object.data(pluginName).destroy();
+        tooltip = null;
+      });
+
       it('expected to not have class tooltip--active', function() {
-        object.trigger('mouseleave');
+        object
+          .trigger('mouseenter')
+          .trigger('mouseleave');
+        tooltip = object.data(pluginName).$tooltip;
         return expect(tooltip.hasClass('tooltip--active')).to.be.not.ok;
       });
 

@@ -4,41 +4,48 @@
 
   var pluginName = 'iptTooltip';
   var defaults = {
+    bubbleArrow: false,
+    bubbleArrowClass: 'tooltip__bubble-arrow',
+    closeButton: false,
+    closeButtonClass: 'tooltip__close',
+    dataAttrTooltipText: 'data-tooltip-text',
+    dataAttrTooltipHeadline: 'data-tooltip-headline',
+    defaultHorizontalPosition: 'right',
+    defaultVerticalPosition: 'top',
+    fadeDuration: 250,
+    headlineClass: 'tooltip__headline',
     margin: 5,
-    maxWidth: 264,
+    maxWidth: 300,
+    stick: false,
+    textWrapperClass: 'tooltip__text',
     tooltipClass: 'tooltip',
-    tooltipClassActiveModifier: '--active',
-    tooltipID: 'js_tooltip',
-    dataAttrTooltipText: 'data-tooltip-text'
+    tooltipClassActiveModifier: '--active'
   };
+
+  var viewport;
+  var resizeTimeout = 0;
+  var scrollTimeout = 0;
+  var throttle = 250;
 
   /**
    * IPTTooltip
    * @constructor
-   * @param {object} element - jQuery element
+   * @param {object} element
    * @param {object} options - plugin options
    */
   function IPTTooltip(element, options) {
 
-    this.element = $(element);
     this.settings = $.extend({}, defaults, options);
-    this._defaults = defaults;
-    this._name = pluginName;
 
-    this.tooltipText = this.element.attr(this.settings.dataAttrTooltipText);
+    this.$element = $(element);
+    this.$element.css('white-space', 'nowrap');
 
-    this.element.css({'white-space': 'nowrap'});
-
-    if ($('#' + this.settings.tooltipID).length === 0) {
-      $('<div/>', {
-        id: this.settings.tooltipID,
-        class: this.settings.tooltipClass
-      }).appendTo('body');
-    }
-    this.tooltip = $('#' + this.settings.tooltipID);
+    this.resizeTimeout = 0;
 
     this.active = false;
-    this.resizeTimeout = null;
+    this.tooltipText = this.$element.attr(this.settings.dataAttrTooltipText);
+    this.tooltipHeadline = this.$element.attr(this.settings.dataAttrTooltipHeadline);
+    this.position = {};
 
     this.addEventListeners();
 
@@ -47,64 +54,221 @@
   IPTTooltip.prototype = {
 
     /**
-     * sets position, height and width of the tooltip
+     * sets the position of the tooltip
+     * @param {event} event - jQuery event
      * @returns {undefined}
      */
     setDimensions: function() {
 
-      this.tooltip.css({
-        top: 'auto',
-        left: 'auto',
-        'max-width': this.settings.maxWidth
-      });
+      this.updateTriggerDimensions();
 
-      var viewportWidth = $(window).width();
-      var tooltipWidth = this.tooltip.outerWidth();
-      var tooltipHeight = this.tooltip.outerHeight();
-      var targetWidth = this.element.outerWidth();
-      var targetHeight = this.element.outerHeight();
-      var targetOffset = this.element.offset();
-      var targetX = targetOffset.left;
-      var targetY = targetOffset.top;
-      if (tooltipWidth > viewportWidth) {
-        tooltipWidth = viewportWidth;
-        this.tooltip.css('max-width', viewportWidth);
+      this.setHorizontalPosition(this.settings.defaultHorizontalPosition);
+      this.setVerticalPosition(this.settings.defaultVerticalPosition);
+
+      switch (this.settings.defaultHorizontalPosition) {
+        case 'center':
+          /* if tooltip reaches left or right out of the viewport move it to the edge */
+          if (this.position.left < 0) {
+            this.position.left = this.settings.margin;
+          } else if (this.position.left + this.tooltipWidth > viewport.width) {
+            this.position.left = viewport.width - this.tooltipWidth - this.settings.margin;
+          }
+          break;
+        case 'left':
+          /* if tooltip reaches out to the left of the viewport => open it to the right */
+          if (this.position.left < 0) {
+            this.setHorizontalPosition('right');
+          }
+          /* if tooltip now reaches out to the right of the viewport => center it over the trigger element */
+          if (this.position.left + this.tooltipWidth > viewport.width) {
+            this.setHorizontalPosition('center');
+          }
+          break;
+        default:
+          /* if tooltip reaches out to the right of the viewport => open it to the left */
+          if (this.position.left + this.tooltipWidth > viewport.width) {
+            this.setHorizontalPosition('left');
+          }
+          /* if tooltip now reaches out to the left of the viewport => center it over the trigger element */
+          if (this.position.left < 0) {
+            this.setHorizontalPosition('center');
+          }
+          break;
       }
 
-      var positionY = 'top';
-      var positionX = 'right';
-      var posLeft = targetX + targetWidth + this.settings.margin;
-      var posTop  = targetY - tooltipHeight - this.settings.margin;
-
-      if (posLeft + tooltipWidth > viewportWidth) {
-        posLeft = targetX - tooltipWidth - this.settings.margin;
-        positionX = 'left';
+      /* if tooltip still does not fit into viewport horizontally => center within window */
+      if (this.position.left < 0 || this.position.left + this.tooltipWidth > viewport.width) {
+        this.position.left = (viewport.width - this.tooltipWidth) * 0.5;
+        this.position.horizontal = 'center';
       }
 
-      if (posLeft < 0) {
-        posLeft = targetX + (targetWidth - tooltipWidth) * 0.5;
-        positionX = 'center';
+      if (this.position.vertical === 'bottom') {
+        /* if tooltip reaches out the bottom of the viewport => open to top */
+        if (this.position.top + this.tooltipHeight > viewport.bottom) {
+          this.setVerticalPosition('top');
+        }
+      } else {
+        /* if tooltip reaches out the top of the viewport => open to bottom */
+        if (this.position.top < viewport.top) {
+          this.setVerticalPosition('bottom');
+        }
       }
 
-      if (posLeft < 0 || posLeft + tooltipWidth > viewportWidth) {
-        posLeft = (viewportWidth - tooltipWidth) * 0.5;
-        positionX = 'center';
+      this.$tooltip
+        .css({
+          left: this.position.left,
+          top: this.position.top
+        })
+        .removeClass(this.settings.tooltipClass + '--top-right')
+        .removeClass(this.settings.tooltipClass + '--top-center')
+        .removeClass(this.settings.tooltipClass + '--top-left')
+        .removeClass(this.settings.tooltipClass + '--bottom-right')
+        .removeClass(this.settings.tooltipClass + '--bottom-center')
+        .removeClass(this.settings.tooltipClass + '--bottom-left')
+        .addClass(this.settings.tooltipClass + '--' + this.position.vertical + '-' + this.position.horizontal);
+
+      this.updateArrowPosition();
+
+    },
+
+    /**
+     * calculates horizontal position of the tooltip
+     * @param {string} position - left, center, right
+     * @returns {undefined}
+     */
+    setHorizontalPosition: function(position) {
+
+      switch (position) {
+        case 'left':
+          this.position.left = this.trigger.offsetLeft - this.tooltipWidth - this.settings.margin;
+          this.position.horizontal = 'left';
+          break;
+        case 'center':
+          this.position.left = this.trigger.offsetLeft + (this.trigger.width - this.tooltipWidth) * 0.5;
+          this.position.horizontal = 'center';
+          break;
+        default:
+          this.position.left = this.trigger.offsetLeft + this.trigger.width + this.settings.margin;
+          this.position.horizontal = 'right';
+          break;
       }
 
-      if (posTop < $(window).scrollTop()) {
-        posTop = targetY + targetHeight + this.settings.margin;
-        positionY = 'bottom';
+    },
+
+    /**
+     * calculates vertical position of the tooltip
+     * @param {string} position - top or bottom
+     * @returns {undefined}
+     */
+    setVerticalPosition: function(position) {
+
+      switch (position) {
+        case 'bottom':
+          this.position.top = this.trigger.offsetTop + this.trigger.height + this.settings.margin;
+          this.position.vertical = 'bottom';
+          break;
+        default:
+          this.position.top = this.trigger.offsetTop - this.tooltipHeight - this.settings.margin;
+          this.position.vertical = 'top';
+          break;
       }
 
-      this.tooltip
-        .css({left: posLeft, top: posTop})
-        .removeClass('tooltip--top-right')
-        .removeClass('tooltip--top-center')
-        .removeClass('tooltip--top-left')
-        .removeClass('tooltip--bottom-right')
-        .removeClass('tooltip--bottom-center')
-        .removeClass('tooltip--bottom-left')
-        .addClass(this.settings.tooltipClass + '--' + positionY + '-' + positionX);
+    },
+
+    /**
+     * updates the element / trigger dimensions
+     * @returns {undefined}
+     */
+    updateTriggerDimensions: function() {
+
+      this.trigger = {
+        width: this.$element.outerWidth(),
+        height: this.$element.outerHeight(),
+        offsetTop: this.$element.offset().top,
+        offsetLeft: this.$element.offset().left
+      };
+
+    },
+
+    /**
+     * updates the tooltip dimensions
+     * @returns {undefined}
+     */
+    updateTooltipDimensions: function() {
+
+      if (this.$tooltip) {
+        this.$tooltip.css('max-width', this.settings.maxWidth);
+        this.tooltipWidth = this.$tooltip.outerWidth();
+
+        if (this.tooltipWidth > viewport.width) {
+          this.tooltipWidth = viewport.width - 2 * this.settings.margin;
+          this.$tooltip.css('max-width', this.tooltipWidth);
+        }
+
+        this.tooltipHeight = this.$tooltip.outerHeight();
+      }
+
+    },
+
+    /**
+     * calculate and set arrow position - centered over / under trigger - relative to left corner of the tooltip
+     * @returns {undefined}
+     */
+    updateArrowPosition: function() {
+
+      if (this.settings.bubbleArrow) {
+        var delta = (this.trigger.offsetLeft - this.position.left) + this.trigger.width / 2;
+        this.$tooltip
+          .find('.' + this.settings.bubbleArrowClass)
+          .css('left', delta + 'px');
+      }
+
+    },
+
+    /**
+     * creates the tooltip
+     * @returns {undefined}
+     */
+    create: function() {
+
+      if (!this.$tooltip) {
+        var $tooltip = $('<div/>').addClass(this.settings.tooltipClass);
+        if (this.tooltipHeadline) {
+          $('<h4/>')
+            .addClass(this.settings.headlineClass)
+            .text(this.tooltipHeadline)
+            .appendTo($tooltip);
+        }
+        $('<div/>')
+          .addClass(this.settings.textWrapperClass)
+          .html(this.tooltipText)
+          .appendTo($tooltip);
+        if (this.settings.bubbleArrow) {
+          $('<div/>')
+            .addClass(this.settings.bubbleArrowClass)
+            .appendTo($tooltip);
+        }
+        if (this.settings.closeButton) {
+          $('<button/>')
+            .addClass(this.settings.closeButtonClass)
+            .appendTo($tooltip)
+            .on(getNamespacedEvent('click'), null, this, this.hide);
+        }
+        this.$tooltip = $tooltip.appendTo('body');
+        this.updateTooltipDimensions();
+      }
+
+    },
+
+    /**
+     * remove tooltip from DOM
+     * @returns {undefined}
+     */
+    remove: function() {
+
+      if (this.$tooltip) {
+        this.$tooltip.remove();
+      }
 
     },
 
@@ -116,9 +280,14 @@
     show: function(event) {
 
       var self = event.data;
-      self.tooltip
-        .addClass(self.settings.tooltipClass + self.settings.tooltipClassActiveModifier);
-      self.active = true;
+      if (self.$tooltip) {
+        self.$element.trigger(getNamespacedEvent('beforeShow'));
+        self.$tooltip
+          .addClass(self.settings.tooltipClass + self.settings.tooltipClassActiveModifier)
+          .stop()
+          .fadeIn(self.settings.fadeDuration);
+        self.active = true;
+      }
 
     },
 
@@ -130,9 +299,14 @@
     hide: function(event) {
 
       var self = event.data;
-      self.tooltip
-        .removeClass(self.settings.tooltipClass + self.settings.tooltipClassActiveModifier);
-      self.active = false;
+      if (self.active) {
+        self.$tooltip
+          .removeClass(self.settings.tooltipClass + self.settings.tooltipClassActiveModifier)
+          .stop()
+          .fadeOut(self.settings.fadeDuration);
+        self.active = false;
+        self.$element.trigger(getNamespacedEvent('afterHide'));
+      }
 
     },
 
@@ -144,12 +318,9 @@
     handleMouseEnter: function(event) {
 
       var self = event.data;
-      var text = self.tooltipText;
-      if (text && text !== '') {
-        self.tooltip.html(text);
-        self.setDimensions();
-        self.show(event);
-      }
+      self.create();
+      self.setDimensions();
+      self.show(event);
 
     },
 
@@ -161,10 +332,11 @@
     handleResize: function(event) {
 
       var self = event.data;
+      self.hide(event);
       clearTimeout(self.resizeTimeout);
       self.resizeTimeout = setTimeout(function() {
-        self.setDimensions();
-      }, 250);
+        self.updateTooltipDimensions();
+      }, throttle);
 
     },
 
@@ -174,28 +346,83 @@
      */
     addEventListeners: function() {
 
-      this.element
-        .on('mouseenter' + '.' + this._name, null, this, this.handleMouseEnter)
-        .on('mouseleave' + '.' + this._name, null, this, this.hide);
+      this.$element
+        .on(getNamespacedEvent('mouseenter'), null, this, this.handleMouseEnter)
+        .on(getNamespacedEvent('touchstart'), null, this, this.handleMouseEnter);
 
-      this.tooltip
-        .off('click' + '.' + this._name)
-        .on('click' + '.' + this._name, null, this, this.hide);
+      if (!this.settings.stick) {
+        this.$element.on(getNamespacedEvent('mouseleave'), null, this, this.hide);
+      }
 
-      $(window)
-        .off('resize' + '.' + this._name)
-        .on('resize' + '.' + this._name, null, this, this.handleResize);
+      $(window).on(getNamespacedEvent('resize'), null, this, this.handleResize);
 
     },
 
+    /**
+     * destroys this instance of tooltip
+     * @returns {undefined}
+     */
     destroy: function() {
 
-      this.element.off('mouseenter' + '.' + this._name);
-      this.element.removeData('plugin_' + pluginName);
+      this.remove();
+      this.$element
+        .off('.' + pluginName)
+        .removeData('plugin_' + pluginName);
 
     }
 
   };
+
+  function updateViewportDimensions() {
+
+    var $window = $(window);
+    var height = $window.height();
+    var scrollTop = $window.scrollTop();
+    viewport = {
+      width: $window.width(),
+      height: height,
+      top: scrollTop,
+      bottom: scrollTop + height
+    };
+
+  }
+
+  function handleResize() {
+
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(function() {
+      updateViewportDimensions();
+    }, throttle);
+
+  }
+
+  function handleScroll() {
+
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(function() {
+      updateViewportDimensions();
+    }, throttle);
+
+  }
+
+  function addEventListeners() {
+
+    $(window)
+      .on('resize', handleResize)
+      .on('scroll', handleScroll);
+
+  }
+
+  function getNamespacedEvent(eventName) {
+    return eventName + '.' + pluginName;
+  }
+
+  function init() {
+    updateViewportDimensions();
+    addEventListeners();
+  }
+
+  init();
 
   $.fn[pluginName] = function(options) {
 

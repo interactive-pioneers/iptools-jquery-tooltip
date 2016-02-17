@@ -4,7 +4,7 @@ Simple jQuery Tooltip Plugin
 
 ## Features
 
-Simple tooltip plugin, fully customizable with CSS, animation using CSS3 tranisition.
+Simple tooltip plugin, fully customizable with CSS, animation using CSS3 transitions.
 
 ## Requirements
 
@@ -27,6 +27,32 @@ Simple tooltip plugin, fully customizable with CSS, animation using CSS3 tranisi
 </script>
 </body>
 ```
+
+## Options
+
+Name                      | Default                      | Type    | Description
+:-------------------------|:-----------------------------|:--------|:-----------
+bubbleArrow               | `false`                      | boolean | Append an arrow / triangle element to the tooltip
+bubbleArrowClass          | `tooltip__bubble-arrow`      | string  | Class of the bubble arrow element
+closeButton               | `false`                      | boolean | Add a close button
+closeButtonClass          | `tooltip__close`             | string  | Class of the close button
+dataAttrTooltipText       | `data-tooltip-text`          | string  | Data attribute which holds the tooltip text
+dataAttrTooltipHeadline   | `data-tooltip-headline`      | string  | Data attribute which holds a tooltip headline
+defaultHorizontalPosition | `right`                      | string  | right / center / left
+defaultVertivalPosition   | `top`                        | string  | top / bottom
+fadeDuration              | `250`                        | int     | Fade duration
+headlineClass             | `tooltip__headline`          | string  | Class of the tooltip headline
+margin                    | `5`                          | int     | Margin of the tooltip
+maxWidth                  | `300`                        | int     | Maximum width of the tooltip
+stick                     | `false`                      | boolean | Tooltip does not close on mouseleave
+textWrapperClass          | `tooltip__text`              | string  | Class of the tooltip text wrapper
+tooltipClass              | `tooltip`                    | string  | Tooltip base class
+tooltipClassActiveModifier| `--active`                   | string  | Modifier that is added to the base class when tooltip is active
+
+## Events
+
+iptTooltip.beforeShow
+iptTooltip.afterHide
 
 ## Contributions
 

@@ -1,25 +1,25 @@
-$black: #000000;
-$white: #FFFFFF;
+$black: #000;
+$white: #fff;
 
 .tooltip {
   position: absolute;
   z-index: 100;
   
-  width: auto;
   padding: 15px;
-  border: 1px solid $black;
+  width: auto;
 
-  background: $white;
-  text-align: left;
+  background-color: $white;
+  filter: drop-shadow(0 0 6px rgba($black, 0.25));
+
   color: $black;
   font-size: 12px;
   line-height: 16px;
-  opacity: 0;
+  text-align: left;
+
   transform: scale(0);
-  transition: transform .25s ease-in-out, opacity .25s ease-in-out;
+  transition: transform 0.25s ease-in-out;
 
   &--active {
-    opacity: 1;
     transform: scale(1);
   }
 
@@ -45,5 +45,82 @@ $white: #FFFFFF;
 
   &--bottom-left {
     transform-origin: top right;
+  }
+
+  &__headline {
+    margin-bottom: 10px;
+    padding-right: 30px;
+
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 18px;
+  }
+
+  // &__text {}
+
+  &__bubble-arrow {
+    position: absolute;
+    left: 50%;
+
+    width: 20px;
+    height: 0;
+
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+
+    transform: translate3d(-50%, 0, 0);
+  }
+
+  &--top-center &__bubble-arrow {
+    top: 100%;
+
+    border-top: 10px solid $white;
+  }
+
+  &--bottom-center &__bubble-arrow {
+    bottom: 100%;
+
+    border-bottom: 10px solid $white;
+  }
+
+  &--top-center {
+    margin-top: -5px;
+  }
+
+  &--bottom-center {
+    margin-top: 5px;
+  }
+
+  &__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    
+    display: block;
+    width: 12px;
+    height: 12px;
+
+    &::before,
+    &::after {
+      position: absolute;
+      top: -2px;
+      left: 5px;
+
+      display: block;
+      width: 2px;
+      height: 16px;
+
+      background-color: $black;
+
+      content: '';
+    }
+
+    &::before {
+      transform: rotate(-45deg);
+    }
+
+    &::after {
+      transform: rotate(45deg);
+    }
   }
 }
