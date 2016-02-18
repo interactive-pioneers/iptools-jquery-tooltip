@@ -2,7 +2,7 @@
   "name": "iptools-jquery-tooltip",
   "description": "Simple jQuery Tooltip Plugin",
   "main": "src/iptools-jquery-tooltip.js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "GPL-3.0",
   "ignore": [
     ".git*",
