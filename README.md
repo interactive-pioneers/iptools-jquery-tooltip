@@ -51,8 +51,8 @@ tooltipClassActiveModifier| `--active`                   | string  | Modifier th
 
 ## Events
 
-iptTooltip.beforeShow
-iptTooltip.afterHide
+- beforeShow.iptTooltip
+- afterHide.iptTooltip
 
 ## Contributions
 
