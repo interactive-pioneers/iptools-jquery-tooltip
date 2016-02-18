@@ -277,16 +277,15 @@
      * @param {event} event - jQuery event
      * @returns {undefined}
      */
-    show: function(event) {
+    show: function() {
 
-      var self = event.data;
-      if (self.$tooltip) {
-        self.$element.trigger(getNamespacedEvent('beforeShow'));
-        self.$tooltip
-          .addClass(self.settings.tooltipClass + self.settings.tooltipClassActiveModifier)
+      if (this.$tooltip && !this.active) {
+        this.$element.trigger(getNamespacedEvent('beforeShow'));
+        this.$tooltip
+          .addClass(this.settings.tooltipClass + this.settings.tooltipClassActiveModifier)
           .stop()
-          .fadeIn(self.settings.fadeDuration);
-        self.active = true;
+          .fadeIn(this.settings.fadeDuration);
+        this.active = true;
       }
 
     },
@@ -296,31 +295,16 @@
      * @param {event} event - jQuery event
      * @returns {undefined}
      */
-    hide: function(event) {
+    hide: function() {
 
-      var self = event.data;
-      if (self.active) {
-        self.$tooltip
-          .removeClass(self.settings.tooltipClass + self.settings.tooltipClassActiveModifier)
+      if (this.active) {
+        this.$tooltip
+          .removeClass(this.settings.tooltipClass + this.settings.tooltipClassActiveModifier)
           .stop()
-          .fadeOut(self.settings.fadeDuration);
-        self.active = false;
-        self.$element.trigger(getNamespacedEvent('afterHide'));
+          .fadeOut(this.settings.fadeDuration);
+        this.active = false;
+        this.$element.trigger(getNamespacedEvent('afterHide'));
       }
-
-    },
-
-    /**
-     * handles mouseenter event on linked elements
-     * @param {event} event - jQuery event
-     * @returns {undefined}
-     */
-    handleMouseEnter: function(event) {
-
-      var self = event.data;
-      self.create();
-      self.setDimensions();
-      self.show(event);
 
     },
 
@@ -332,7 +316,7 @@
     handleResize: function(event) {
 
       var self = event.data;
-      self.hide(event);
+      self.hide();
       clearTimeout(self.resizeTimeout);
       self.resizeTimeout = setTimeout(function() {
         self.updateTooltipDimensions();
@@ -347,11 +331,11 @@
     addEventListeners: function() {
 
       this.$element
-        .on(getNamespacedEvent('mouseenter'), null, this, this.handleMouseEnter)
-        .on(getNamespacedEvent('touchstart'), null, this, this.handleMouseEnter);
+        .on(getNamespacedEvent('mouseenter'), null, this, handleMouseEnter)
+        .on(getNamespacedEvent('touchstart'), null, this, handleMouseEnter);
 
       if (!this.settings.stick) {
-        this.$element.on(getNamespacedEvent('mouseleave'), null, this, this.hide);
+        this.$element.on(getNamespacedEvent('mouseleave'), null, this, handleMouseLeave);
       }
 
       $(window).on(getNamespacedEvent('resize'), null, this, this.handleResize);
@@ -384,6 +368,21 @@
       top: scrollTop,
       bottom: scrollTop + height
     };
+
+  }
+
+  function handleMouseEnter(event) {
+
+    var self = event.data;
+    self.create();
+    self.setDimensions();
+    self.show();
+
+  }
+
+  function handleMouseLeave(event) {
+
+    event.data.hide();
 
   }
 
