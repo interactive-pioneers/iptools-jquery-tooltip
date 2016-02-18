@@ -252,7 +252,7 @@
           $('<button/>')
             .addClass(this.settings.closeButtonClass)
             .appendTo($tooltip)
-            .on(getNamespacedEvent('click'), null, this, this.hide);
+            .on(getNamespacedEvent('click'), this.hide);
         }
         this.$tooltip = $tooltip.appendTo('body');
         this.updateTooltipDimensions();
