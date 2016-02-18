@@ -13,14 +13,16 @@ Simple tooltip plugin, fully customizable with CSS, animation using CSS3 transit
 ## Example
 
 ```html
-<head><link rel="stylesheet" href="dist/iptools-jquery-tooltip.css" type="text/css"></head>
+<head>
+  <link rel="stylesheet" href="dist/iptools-jquery-tooltip.css" type="text/css">
+</head>
 <body>
-<a class="js_tooltip" data-tooltip-text="Text to display inside Tooltip">Open Tooltip</a>
+<a class="has-tooltip" data-tooltip-text="Text to display inside Tooltip" data-tooltip-headline="A headline">Open Tooltip</a>
 
 <script src="src/iptools-jquery-tooltip.js"></script>
 <script type="text/javascript">
    $(document).ready(function() {
-      $('.js_tooltip').iptTooltip({
+      $('.has-tooltip').iptTooltip({
          // options
       });
    });
