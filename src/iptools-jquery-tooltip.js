@@ -407,6 +407,21 @@
 
   }
 
+  function handleBodyClick(event) {
+
+    var instance;
+    var length = instances.length;
+    for (var i = 0; i < length; ++i) {
+      instance = instances[i];
+      if (instance.settings.stick && instance.active) {
+        if (!instance.$tooltip.is(event.target) && instance.$tooltip.has(event.target).length === 0) {
+          instance.hide();
+        }
+      }
+    }
+
+  }
+
   function handleResize() {
 
     clearTimeout(resizeTimeout);
@@ -428,8 +443,10 @@
   function addEventListeners() {
 
     $(window)
-      .on('resize', handleResize)
-      .on('scroll', handleScroll);
+      .on(getNamespacedEvent('resize'), handleResize)
+      .on(getNamespacedEvent('scroll'), handleScroll);
+
+    $('body').on(getNamespacedEvent('click') + ' ' + getNamespacedEvent('touchstart'), handleBodyClick);
 
   }
 
