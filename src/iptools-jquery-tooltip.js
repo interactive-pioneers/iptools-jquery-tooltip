@@ -16,12 +16,14 @@
     headlineClass: 'tooltip__headline',
     margin: 5,
     maxWidth: 300,
+    singleOpen: false,
     stick: false,
     textWrapperClass: 'tooltip__text',
     tooltipClass: 'tooltip',
     tooltipClassActiveModifier: '--active'
   };
 
+  var instances = [];
   var viewport;
   var resizeTimeout = 0;
   var scrollTimeout = 0;
@@ -274,13 +276,15 @@
 
     /**
      * shows the tooltip
-     * @param {event} event - jQuery event
      * @returns {undefined}
      */
     show: function() {
 
       if (this.$tooltip && !this.active) {
         this.$element.trigger(getNamespacedEvent('beforeShow'));
+        if (this.settings.singleOpen) {
+          this.hideAllOtherTooltips();
+        }
         this.$tooltip
           .addClass(this.settings.tooltipClass + this.settings.tooltipClassActiveModifier)
           .stop()
@@ -292,7 +296,6 @@
 
     /**
      * hides the tooltip
-     * @param {event} event - jQuery event
      * @returns {undefined}
      */
     hide: function() {
@@ -304,6 +307,23 @@
           .fadeOut(this.settings.fadeDuration);
         this.active = false;
         this.$element.trigger(getNamespacedEvent('afterHide'));
+      }
+
+    },
+
+    /**
+     * hide all tooltips except this one
+     * @returns {undefined}
+     */
+    hideAllOtherTooltips: function() {
+
+      var instance;
+      var length = instances.length;
+      for (var i = 0; i < length; ++i) {
+        instance = instances[i];
+        if (this.$element !== instance.$element) {
+          instance.hide();
+        }
       }
 
     },
@@ -352,6 +372,7 @@
       this.$element
         .off('.' + pluginName)
         .removeData('plugin_' + pluginName);
+      // @TODO remove this instance from instances array
 
     }
 
@@ -428,7 +449,9 @@
     return this.each(function() {
 
       if (!$.data(this, 'plugin_' + pluginName)) {
-        $.data(this, 'plugin_' + pluginName, new IPTTooltip(this, options));
+        var instance = new IPTTooltip(this, options);
+        $.data(this, 'plugin_' + pluginName, instance);
+        instances.push(instance);
       }
 
     });
