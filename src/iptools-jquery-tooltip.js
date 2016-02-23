@@ -284,9 +284,6 @@
       if (this.$tooltip && !this.active) {
         var self = this;
         this.$element.trigger(getNamespacedEvent('beforeShow'));
-        if (this.settings.singleOpen) {
-          this.hideAllOtherTooltips();
-        }
         this.$tooltip
           .addClass(this.settings.tooltipClass + this.settings.tooltipClassActiveModifier)
           .stop()
@@ -294,6 +291,9 @@
             self.$element.trigger(getNamespacedEvent('afterShow'));
           });
         this.active = true;
+        if (this.settings.singleOpen) {
+          this.hideAllOtherTooltips();
+        }
       }
 
     },
