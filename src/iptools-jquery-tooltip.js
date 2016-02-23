@@ -16,6 +16,7 @@
     headlineClass: 'tooltip__headline',
     margin: 5,
     maxWidth: 300,
+    openOnClick: false,
     singleOpen: false,
     stick: false,
     textWrapperClass: 'tooltip__text',
@@ -350,9 +351,13 @@
      */
     addEventListeners: function() {
 
-      this.$element
-        .on(getNamespacedEvent('mouseenter'), null, this, handleMouseEnter)
-        .on(getNamespacedEvent('touchstart'), null, this, handleMouseEnter);
+      if (this.settings.openOnClick) {
+        this.$element.on(getNamespacedEvent('click'), null, this, handleMouseEnter);
+      } else {
+        this.$element.on(getNamespacedEvent('mouseenter'), null, this, handleMouseEnter);
+      }
+
+      this.$element.on(getNamespacedEvent('touchstart'), null, this, handleMouseEnter);
 
       if (!this.settings.stick) {
         this.$element.on(getNamespacedEvent('mouseleave'), null, this, handleMouseLeave);
@@ -370,7 +375,10 @@
 
       this.remove();
       this.$element
-        .off('.' + pluginName)
+        .off(getNamespacedEvent('click'))
+        .off(getNamespacedEvent('mouseenter'))
+        .off(getNamespacedEvent('mouseleave'))
+        .off(getNamespacedEvent('touchstart'))
         .removeData('plugin_' + pluginName);
       // @TODO remove this instance from instances array
 
@@ -394,6 +402,7 @@
 
   function handleMouseEnter(event) {
 
+    event.stopPropagation();
     var self = event.data;
     self.create();
     self.setDimensions();
