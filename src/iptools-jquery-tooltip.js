@@ -282,6 +282,7 @@
     show: function() {
 
       if (this.$tooltip && !this.active) {
+        var self = this;
         this.$element.trigger(getNamespacedEvent('beforeShow'));
         if (this.settings.singleOpen) {
           this.hideAllOtherTooltips();
@@ -289,7 +290,9 @@
         this.$tooltip
           .addClass(this.settings.tooltipClass + this.settings.tooltipClassActiveModifier)
           .stop()
-          .fadeIn(this.settings.fadeDuration);
+          .fadeIn(this.settings.fadeDuration, function() {
+            self.$element.trigger(getNamespacedEvent('afterShow'));
+          });
         this.active = true;
       }
 
@@ -302,12 +305,15 @@
     hide: function() {
 
       if (this.active) {
+        var self = this;
+        this.$element.trigger(getNamespacedEvent('beforeHide'));
         this.$tooltip
           .removeClass(this.settings.tooltipClass + this.settings.tooltipClassActiveModifier)
           .stop()
-          .fadeOut(this.settings.fadeDuration);
+          .fadeOut(this.settings.fadeDuration, function() {
+            self.$element.trigger(getNamespacedEvent('afterHide'));
+          });
         this.active = false;
-        this.$element.trigger(getNamespacedEvent('afterHide'));
       }
 
     },
