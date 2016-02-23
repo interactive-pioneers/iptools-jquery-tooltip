@@ -46,6 +46,7 @@ fadeDuration              | `250`                        | int     | Fade durati
 headlineClass             | `tooltip__headline`          | string  | Class of the tooltip headline
 margin                    | `5`                          | int     | Margin of the tooltip
 maxWidth                  | `300`                        | int     | Maximum width of the tooltip
+openOnClick               | `false`                      | boolean | Open tooltip on click instead of mouseenter
 stick                     | `false`                      | boolean | Tooltip does not close on mouseleave
 textWrapperClass          | `tooltip__text`              | string  | Class of the tooltip text wrapper
 tooltipClass              | `tooltip`                    | string  | Tooltip base class
@@ -54,6 +55,8 @@ tooltipClassActiveModifier| `--active`                   | string  | Modifier th
 ## Events
 
 - beforeShow.iptTooltip
+- afterShow.iptTooltip
+- beforeHide.iptTooltip
 - afterHide.iptTooltip
 
 ## Contributions
