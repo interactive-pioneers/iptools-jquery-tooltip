@@ -19,21 +19,23 @@ module.exports = function(grunt) {
           '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
           '* <%= yeoman.pkg.homepage %>\n' +
           '* Copyright © <%= grunt.template.today("yyyy") %> ' +
-          '<%= yeoman.pkg.author.name %>; Licensed <%= yeoman.pkg.licenses[0].type %> */\n'
+          '<%= yeoman.pkg.author.name %>; Licensed <%= yeoman.pkg.license %> */\n'
       },
     },
     watch: {
       qa: {
         files: [
           '<%= yeoman.src %>/iptools-jquery-tooltip.js',
-          'test/spec/test.js'
+          '<%= yeoman.test %>/index.html',
+          '<%= yeoman.test %>/spec/test.js'
         ],
         tasks: ['concurrent:qa']
       },
       bdd: {
         files: [
           '<%= yeoman.src %>/iptools-jquery-tooltip.js',
-          'test/spec/test.js'
+          '<%= yeoman.test %>/index.html',
+          '<%= yeoman.test %>/spec/*.js'
         ],
         tasks: ['test']
       }
@@ -45,7 +47,7 @@ module.exports = function(grunt) {
       all: [
         'Gruntfile.js',
         '<%= yeoman.src %>/{,*/}*.js',
-        'test/spec/{,*/}*.js'
+        '<%= yeoman.test %>/spec/{,*/}*.js'
       ]
     },
     mocha: {
@@ -53,7 +55,7 @@ module.exports = function(grunt) {
         options: {
           run: true
         },
-        src: ['test/index.html']
+        src: ['<%= yeoman.test %>/index.html']
       }
     },
     concurrent: {
@@ -77,7 +79,7 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/iptools-jquery-tooltip.min.js': 'src/iptools-jquery-tooltip.js'
+          '<%= yeoman.dist %>/iptools-jquery-tooltip.min.js': '<%= yeoman.src %>/iptools-jquery-tooltip.js'
         }
       }
     },
@@ -94,7 +96,7 @@ module.exports = function(grunt) {
     sass: {
       dist: {
         files: {
-          'dist/iptools-jquery-tooltip.css' : 'src/iptools-jquery-tooltip.scss'
+          '<%= yeoman.dist %>/iptools-jquery-tooltip.css' : '<%= yeoman.src %>/iptools-jquery-tooltip.scss'
         }
       }
     },
