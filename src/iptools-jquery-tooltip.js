@@ -12,6 +12,7 @@
     dataAttrTooltipHeadline: 'data-tooltip-headline',
     defaultHorizontalPosition: 'right',
     defaultVerticalPosition: 'top',
+    delay: 150,
     fadeDuration: 250,
     headlineClass: 'tooltip__headline',
     margin: 5,
@@ -45,6 +46,7 @@
 
     this.resizeTimeout = 0;
 
+    this.$tooltip = $();
     this.active = false;
     this.tooltipText = this.$element.attr(this.settings.dataAttrTooltipText);
     this.tooltipHeadline = this.$element.attr(this.settings.dataAttrTooltipHeadline);
@@ -199,7 +201,7 @@
      */
     updateTooltipDimensions: function() {
 
-      if (this.$tooltip) {
+      if (this.$tooltip.length) {
         this.$tooltip.css('max-width', this.settings.maxWidth);
         this.tooltipWidth = this.$tooltip.outerWidth();
 
@@ -234,7 +236,7 @@
      */
     create: function() {
 
-      if (!this.$tooltip) {
+      if (this.$tooltip.length === 0) {
         var $tooltip = $('<div/>').addClass(this.settings.tooltipClass);
         if (this.tooltipHeadline) {
           $('<h4/>')
@@ -255,10 +257,13 @@
           $('<button/>')
             .addClass(this.settings.closeButtonClass)
             .appendTo($tooltip)
-            .on(getNamespacedEvent('click'), null, this, handleMouseLeave);
+            .on(getNamespacedEvent('click'), null, this, handleCloseButtonClicked);
         }
         this.$tooltip = $tooltip.appendTo('body');
         this.updateTooltipDimensions();
+        if (!this.settings.stick) {
+          this.$tooltip.on(getNamespacedEvent('mouseleave'), null, this, handleMouseLeave);
+        }
       }
 
     },
@@ -269,7 +274,7 @@
      */
     remove: function() {
 
-      if (this.$tooltip) {
+      if (this.$tooltip.length) {
         this.$tooltip.remove();
       }
 
@@ -281,7 +286,7 @@
      */
     show: function() {
 
-      if (this.$tooltip && !this.active) {
+      if (this.$tooltip.length && !this.active) {
         var self = this;
         this.$element.trigger(getNamespacedEvent('beforeShow'));
         this.$tooltip
@@ -397,6 +402,7 @@
     var $window = $(window);
     var height = $window.height();
     var scrollTop = $window.scrollTop();
+
     viewport = {
       width: $window.width(),
       height: height,
@@ -408,15 +414,33 @@
 
   function handleMouseEnter(event) {
 
-    event.stopPropagation();
     var self = event.data;
-    self.create();
-    self.setDimensions();
-    self.show();
+    setTimeout(function() {
+      if (self.$element.is(':hover')) {
+        self.create();
+        self.setDimensions();
+        self.show();
+      }
+    }, self.settings.delay);
+
+    event.stopPropagation();
 
   }
 
   function handleMouseLeave(event) {
+
+    var self = event.data;
+    setTimeout(function() {
+      if (self.$tooltip.length) {
+        if (!self.$element.is(':hover') && !self.$tooltip.is(':hover')) {
+          self.hide();
+        }
+      }
+    }, self.settings.delay);
+
+  }
+
+  function handleCloseButtonClicked(event) {
 
     event.data.hide();
 
@@ -426,6 +450,7 @@
 
     var instance;
     var length = instances.length;
+
     for (var i = 0; i < length; ++i) {
       instance = instances[i];
       if (instance.settings.stick && instance.active) {
