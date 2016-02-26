@@ -42,6 +42,7 @@ dataAttrTooltipText       | `data-tooltip-text`          | string  | Data attrib
 dataAttrTooltipHeadline   | `data-tooltip-headline`      | string  | Data attribute which holds a tooltip headline
 defaultHorizontalPosition | `right`                      | string  | right / center / left
 defaultVertivalPosition   | `top`                        | string  | top / bottom
+delay                     | `150`                        | int     | Delay until tooltip is shown / hidden
 fadeDuration              | `250`                        | int     | Fade duration
 headlineClass             | `tooltip__headline`          | string  | Class of the tooltip headline
 margin                    | `5`                          | int     | Margin of the tooltip
