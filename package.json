@@ -36,10 +36,14 @@
     "grunt-mocha": "~0.4.10",
     "jit-grunt": "~0.3.2",
     "time-grunt": "~0.3.1",
-    "grunt-jscs": "~1.8.0"
+    "grunt-jscs": "~1.8.0",
+    "chai": "~3.5.0",
+    "jquery": "^1.11.3",
+    "grunt-cli": "^1.2.0",
+    "bower": "^1.8.0"
   },
   "engines": {
-    "node": ">=0.12.0"
+    "node": ">=6.2.0"
   },
   "repository": {
     "type": "git",
@@ -47,7 +51,9 @@
   },
   "license": "GPL-3.0",
   "scripts": {
-    "test": "grunt travis --verbose"
+    "test": "grunt travis --verbose",
+    "bower": "bower",
+    "grunt": "grunt"
   },
   "keywords": [
     "javascript",
