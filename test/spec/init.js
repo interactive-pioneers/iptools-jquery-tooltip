@@ -16,7 +16,7 @@
 
     var $trigger = null;
     var $tooltip = null;
-    var object = null;
+    var tooltip = null;
     var selector = '.js_tooltip';
 
     describe('init', function() {
