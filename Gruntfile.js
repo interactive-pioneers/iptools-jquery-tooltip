@@ -27,7 +27,7 @@ module.exports = function(grunt) {
         files: [
           '<%= yeoman.src %>/iptools-jquery-tooltip.js',
           '<%= yeoman.test %>/index.html',
-          '<%= yeoman.test %>/spec/test.js'
+          '<%= yeoman.test %>/spec/*.js'
         ],
         tasks: ['concurrent:qa']
       },

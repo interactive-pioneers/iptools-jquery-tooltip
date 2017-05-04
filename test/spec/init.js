@@ -1,7 +1,9 @@
 'use strict';
 
-/* global describe, expect, it, beforeEach */
+/* global describe, expect, it, beforeEach, afterEach */
+
 (function() {
+
   describe('iptTooltip', function() {
 
     var config = {
@@ -14,6 +16,8 @@
 
     var $trigger = null;
     var $tooltip = null;
+    var object = null;
+    var selector = '.js_tooltip';
 
     describe('init', function() {
 
@@ -22,7 +26,7 @@
       });
 
       afterEach(function() {
-        // $trigger.data(pluginName).destroy();
+        $trigger.data(pluginName).destroy();
       });
 
       it('expected to construct object', function() {
@@ -42,12 +46,12 @@
     describe('open', function() {
 
       beforeEach(function() {
-        $trigger = $('.js_tooltip').iptTooltip(config);
+        $trigger = $(selector).iptTooltip(config);
+        tooltip = $('#js_tooltip');
       });
 
       afterEach(function() {
-        // $trigger.data(pluginName).destroy();
-        $tooltip = null;
+        $trigger.data(pluginName).destroy();
       });
 
       it('expected to have class tooltip--active', function(done) {
@@ -81,8 +85,7 @@
       });
 
       afterEach(function() {
-        // $trigger.data(pluginName).destroy();
-        $tooltip = null;
+        $trigger.data(pluginName).destroy();
       });
 
       it('expected to not have class tooltip--active', function() {

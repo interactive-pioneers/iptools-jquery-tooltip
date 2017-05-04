@@ -13,11 +13,12 @@
 
   <script src="../node_modules/jquery/dist/jquery.min.js"></script>
   <script src="../node_modules/mocha/mocha.js"></script>
-  <script src="../node_modules/chai.js"></script>
+  <script src="../node_modules/chai/chai.js"></script>
   <script>mocha.setup('bdd');</script>
   <script>var expect = chai.expect;</script>
   <script src="../src/iptools-jquery-tooltip.js"></script>
-  <script src="spec/test.js"></script>
+  <script src="spec/init.js"></script>
+  <script src="spec/destroy.js"></script>
   <script>
     if (navigator.userAgent.indexOf('PhantomJS') < 0) {
       mocha.run();
