@@ -53,7 +53,8 @@
   "scripts": {
     "test": "grunt travis --verbose",
     "bower": "bower",
-    "grunt": "grunt"
+    "grunt": "grunt",
+    "start": "npm run grunt watch:bdd"
   },
   "keywords": [
     "javascript",
