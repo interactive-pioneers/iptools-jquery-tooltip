@@ -1,5 +1,6 @@
 'use strict';
-/* jshint undef: false */
+
+/* global describe, expect, it, beforeEach */
 (function() {
   describe('iptTooltip', function() {
 
