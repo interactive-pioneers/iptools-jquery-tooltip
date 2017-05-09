@@ -31,6 +31,38 @@
   var scrollTimeout = 0;
   var throttle = 250;
 
+  function getNamespacedEvent(eventName) {
+    return eventName + '.' + pluginName;
+  }
+
+  function handleMouseLeave(event) {
+    var self = event.data;
+    setTimeout(function() {
+      if (self.$tooltip.length) {
+        if (!self.$element.is(':hover') && !self.$tooltip.is(':hover')) {
+          self.hide();
+        }
+      }
+    }, self.settings.delay);
+  }
+
+  function handleMouseEnter(event) {
+    var self = event.data;
+    setTimeout(function() {
+      if (self.$element.is(':hover')) {
+        self.create();
+        self.setDimensions();
+        self.show();
+      }
+    }, self.settings.delay);
+
+    event.stopPropagation();
+  }
+
+  function handleCloseButtonClicked(event) {
+    event.data.hide();
+  }
+
   /**
    * IPTTooltip
    * @constructor
@@ -412,40 +444,6 @@
 
   }
 
-  function handleMouseEnter(event) {
-
-    var self = event.data;
-    setTimeout(function() {
-      if (self.$element.is(':hover')) {
-        self.create();
-        self.setDimensions();
-        self.show();
-      }
-    }, self.settings.delay);
-
-    event.stopPropagation();
-
-  }
-
-  function handleMouseLeave(event) {
-
-    var self = event.data;
-    setTimeout(function() {
-      if (self.$tooltip.length) {
-        if (!self.$element.is(':hover') && !self.$tooltip.is(':hover')) {
-          self.hide();
-        }
-      }
-    }, self.settings.delay);
-
-  }
-
-  function handleCloseButtonClicked(event) {
-
-    event.data.hide();
-
-  }
-
   function handleBodyClick(event) {
 
     var instance;
@@ -488,10 +486,6 @@
 
     $('body').on(getNamespacedEvent('click') + ' ' + getNamespacedEvent('touchstart'), handleBodyClick);
 
-  }
-
-  function getNamespacedEvent(eventName) {
-    return eventName + '.' + pluginName;
   }
 
   function init() {
