@@ -1,7 +1,7 @@
 {
   "name": "iptools-jquery-tooltip",
   "version": "1.0.4",
-  "description": "Simple jQuery Modal Plugin",
+  "description": "Simple jQuery tooltip plugin",
   "homepage": "https://github.com/interactive-pioneers/iptools-jquery-tooltip",
   "author": {
     "name": "Interactive Pioneers GmbH",
