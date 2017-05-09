@@ -26,7 +26,7 @@
     "jquery": ">=1.11.3 <4.0.0"
   },
   "devDependencies": {
-    "grunt": "~0.4.4",
+    "grunt": "~1.0.1",
     "grunt-concurrent": "~0.5.0",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-connect": "~0.7.1",
@@ -39,10 +39,7 @@
     "jit-grunt": "~0.3.2",
     "time-grunt": "~0.3.1",
     "grunt-jscs": "~2.7.0",
-    "chai": "~3.5.0",
-    "jquery": "^1.11.3",
-    "grunt-cli": "^1.2.0",
-    "bower": "^1.8.0"
+    "chai": "~3.5.0"
   },
   "engines": {
     "node": ">=6.2.0"
@@ -54,9 +51,8 @@
   "license": "GPL-3.0",
   "scripts": {
     "test": "grunt travis --verbose",
-    "bower": "bower",
     "grunt": "grunt",
-    "start": "npm run grunt watch:bdd"
+    "start": "grunt watch:bdd"
   },
   "keywords": [
     "javascript",
