@@ -8,7 +8,7 @@ Simple tooltip plugin, fully customizable with CSS, animation using CSS3 transit
 
 ## Requirements
 
-- jQuery 1.11.3 or greater
+- jQuery >=1.11.3 <4.0.0
 
 ## Example
 
