@@ -35,6 +35,16 @@
     return eventName + '.' + pluginName;
   }
 
+  function removeFromInstances(instance) {
+    for (var i = 0, l = instances.length; i < l; i++) {
+      if (instances[i] === instance) {
+        delete instances[i];
+        return instance;
+      }
+    }
+    return false;
+  }
+
   function handleMouseLeave(event) {
     var self = event.data;
     setTimeout(function() {
@@ -410,12 +420,8 @@
 
     },
 
-    /**
-     * destroys this instance of tooltip
-     * @returns {undefined}
-     */
     destroy: function() {
-
+      removeFromInstances(this);
       this.remove();
       this.$element
         .off(getNamespacedEvent('click'))
@@ -423,10 +429,7 @@
         .off(getNamespacedEvent('mouseleave'))
         .off(getNamespacedEvent('touchstart'))
         .removeData('plugin_' + pluginName);
-      // @TODO remove this instance from instances array
-
     }
-
   };
 
   function updateViewportDimensions() {
