@@ -1,0 +1,38 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>iptools-jquery-tooltip example</title>
+  <link rel="stylesheet" href="iptools-jquery-tooltip.css">
+  <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="iptools-jquery-tooltip.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('.js_tooltip').iptTooltip();
+      $('.js_tooltip--scrollable').iptTooltip({ stick: true });
+    });
+  </script>
+  <style>
+    a {
+      text-decoration: underline;
+    }
+    .scrollable {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      overflow: scroll;
+    }
+  </style>
+</head>
+<body>
+  <h1>iptools-jquery-tooltip example</h1>
+  <p>
+    It's a paragraph with some irrelevant text including <a class="js_tooltip" data-tooltip-text="Text to display inside Tooltip">a link</a> that triggers tooltip.
+  </p>
+  <div class="scrollable">
+    It's a scrollable container with some longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, longer, but irrelevant text including <a class="js_tooltip--scrollable" data-tooltip-text="Text to display inside Tooltip">a link</a> that triggers tooltip.
+  </div>
+</body>
+</html>
