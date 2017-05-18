@@ -73,6 +73,57 @@
     event.data.hide();
   }
 
+  function handleBodyClick(event) {
+    var instance;
+    var length = instances.length;
+    for (var i = 0; i < length; ++i) {
+      instance = instances[i];
+      if (instance.settings.stick && instance.active) {
+        if (!instance.$tooltip.is(event.target) && instance.$tooltip.has(event.target).length === 0) {
+          instance.hide();
+        }
+      }
+    }
+  }
+
+  function updateViewportDimensions() {
+    var $window = $(window);
+    var height = $window.height();
+    var scrollTop = $window.scrollTop();
+    viewport = {
+      width: $window.width(),
+      height: height,
+      top: scrollTop,
+      bottom: scrollTop + height
+    };
+  }
+
+  function handleResize() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(function() {
+      updateViewportDimensions();
+    }, throttle);
+  }
+
+  function handleScroll() {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(function() {
+      updateViewportDimensions();
+    }, throttle);
+  }
+
+  function addEventListeners() {
+    $(window)
+      .on(getNamespacedEvent('resize'), handleResize)
+      .on(getNamespacedEvent('scroll'), handleScroll);
+    $('body').on(getNamespacedEvent('click') + ' ' + getNamespacedEvent('touchstart'), handleBodyClick);
+  }
+
+  function initViewport() {
+    updateViewportDimensions();
+    addEventListeners();
+  }
+
   /**
    * IPTTooltip
    * @constructor
@@ -80,6 +131,8 @@
    * @param {object} options - plugin options
    */
   function IPTTooltip(element, options) {
+
+    initViewport();
 
     this.settings = $.extend({}, defaults, options);
 
@@ -431,72 +484,6 @@
         .removeData('plugin_' + pluginName);
     }
   };
-
-  function updateViewportDimensions() {
-
-    var $window = $(window);
-    var height = $window.height();
-    var scrollTop = $window.scrollTop();
-
-    viewport = {
-      width: $window.width(),
-      height: height,
-      top: scrollTop,
-      bottom: scrollTop + height
-    };
-
-  }
-
-  function handleBodyClick(event) {
-
-    var instance;
-    var length = instances.length;
-
-    for (var i = 0; i < length; ++i) {
-      instance = instances[i];
-      if (instance.settings.stick && instance.active) {
-        if (!instance.$tooltip.is(event.target) && instance.$tooltip.has(event.target).length === 0) {
-          instance.hide();
-        }
-      }
-    }
-
-  }
-
-  function handleResize() {
-
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(function() {
-      updateViewportDimensions();
-    }, throttle);
-
-  }
-
-  function handleScroll() {
-
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(function() {
-      updateViewportDimensions();
-    }, throttle);
-
-  }
-
-  function addEventListeners() {
-
-    $(window)
-      .on(getNamespacedEvent('resize'), handleResize)
-      .on(getNamespacedEvent('scroll'), handleScroll);
-
-    $('body').on(getNamespacedEvent('click') + ' ' + getNamespacedEvent('touchstart'), handleBodyClick);
-
-  }
-
-  function init() {
-    updateViewportDimensions();
-    addEventListeners();
-  }
-
-  init();
 
   $.fn[pluginName] = function(options) {
 
