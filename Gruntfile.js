@@ -6,6 +6,7 @@ module.exports = function(grunt) {
 
   // load tasks on demand (speeds up dev)
   require('jit-grunt')(grunt, {
+    browserSync: 'grunt-browser-sync'
   });
 
   grunt.initConfig({
@@ -38,6 +39,13 @@ module.exports = function(grunt) {
           '<%= yeoman.test %>/spec/*.js'
         ],
         tasks: ['test']
+      },
+      server: {
+        files: [
+          '<%= yeoman.src %>/iptools-jquery-tooltip.scss',
+          '<%= yeoman.src %>/iptools-jquery-tooltip.js'
+        ],
+        tasks: ['concurrent:build']
       }
     },
     jshint: {
@@ -89,7 +97,7 @@ module.exports = function(grunt) {
         files: [{
           dot: true,
           src: [
-            '<%= yeoman.dist %>/*'
+            '<%= yeoman.dist %>/*.{css,js,map}'
           ]
         }]
       }
@@ -112,6 +120,21 @@ module.exports = function(grunt) {
           '<%= yeoman.src %>/*.js'
         ]
       }
+    },
+    browserSync: {
+      dev: {
+        bsFiles: {
+          src: [
+            'dist/iptools-jquery-tooltip.css',
+            'dist/iptools-jquery-tooltip.min.js',
+            'dist/index.html'
+          ]
+        },
+        options: {
+          watchTask: false,
+          server: './dist'
+        }
+      }
     }
   });
 
@@ -127,4 +150,13 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['build']);
 
   grunt.registerTask('travis', ['concurrent:qa']);
+
+  grunt.registerTask('serve', 'Start server. Use --allow-remote for remote access', function() {
+    grunt.task.run([
+      'clean:dist',
+      'concurrent:build',
+      'browserSync',
+      'watch:server'
+    ]);
+  });
 };
