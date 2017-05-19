@@ -61,5 +61,11 @@
     "tooltip",
     "jquery",
     "css3"
+  ],
+  "files": [
+    "*.md",
+    "LICENSE",
+    "src",
+    "dist"
   ]
 }
